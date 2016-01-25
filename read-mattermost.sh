@@ -67,7 +67,7 @@ do
                 exit 1
             fi
 	    shift
-            ${READ_CMD} "SET NAMES utf8; select c.DisplayName, u.UserName, p.Message from Channels c inner join (Posts p inner join Users u on p.UserId = u.Id) on p.ChannelId = c.Id  where c.DisplayName = '$1' order by p.CreateAt;" | sed 's/          *|$/|/'
+            ${READ_CMD} "SET NAMES utf8; select c.DisplayName, u.UserName, p.Message from Channels c inner join (Posts p inner join Users u on p.UserId = u.Id) on p.ChannelId = c.Id  where c.DisplayName = '$1' order by p.CreateAt;" | sed 's/          *|$/|/' | sed 's/----------*+$/|/g'
 	    exit
             ;;
         *)
