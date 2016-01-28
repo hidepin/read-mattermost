@@ -38,7 +38,7 @@ do
 		usage
                 exit 1
             fi
-            ${READ_CMD} "SET NAMES utf8; select DisplayName, Type, TotalMsgCount, count(UserId) from ChannelMembers cm inner join Channels c on cm.ChannelId = c.Id group by ChannelId order by DisplayName;"
+            ${READ_CMD} "SET NAMES utf8; select Name, Type, TotalMsgCount, count(UserId) from ChannelMembers cm inner join Channels c on cm.ChannelId = c.Id group by ChannelId order by Name;"
 	    exit
             ;;
         'userlist' )
@@ -57,7 +57,7 @@ do
                 exit 1
             fi
 	    shift
-            ${READ_CMD} "SET NAMES utf8; select c.DisplayName, u.Username from Channels c inner join (ChannelMembers cm inner join Users u on cm.UserId = u.Id) on cm.ChannelId = c.Id where c.Name = '$1' order by u.Username;"
+            ${READ_CMD} "SET NAMES utf8; select c.Name, u.Username from Channels c inner join (ChannelMembers cm inner join Users u on cm.UserId = u.Id) on cm.ChannelId = c.Id where c.Name = '$1' order by u.Username;"
 	    exit
             ;;
         'channelmessages' )
@@ -67,7 +67,7 @@ do
                 exit 1
             fi
 	    shift
-            ${READ_CMD} "SET NAMES utf8; select c.DisplayName, u.UserName, p.Message from Channels c inner join (Posts p inner join Users u on p.UserId = u.Id) on p.ChannelId = c.Id  where c.DisplayName = '$1' order by p.CreateAt;" | sed 's/          *|$/|/' | sed 's/----------*+$/|/g'
+            ${READ_CMD} "SET NAMES utf8; select from_unixtime((p.CreateAt DIV 1000) + (9 * 60 * 60)) as DateTime, u.UserName, p.Message from Channels c inner join (Posts p inner join Users u on p.UserId = u.Id) on p.ChannelId = c.Id  where c.Name = '$1' order by p.CreateAt;" | sed 's/          *|$/|/' | sed 's/----------*+$/|/g'
 	    exit
             ;;
         *)
